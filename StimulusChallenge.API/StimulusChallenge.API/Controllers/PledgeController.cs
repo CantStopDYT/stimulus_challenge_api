@@ -1,6 +1,6 @@
 using System;
-using System.Web.Http;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 using StimulusChallenge.API.Models;
@@ -8,7 +8,9 @@ using StimulusChallenge.API.Services;
 
 namespace StimulusChallenge.API.Controllers
 {
-    public class PledgeController : ApiController
+    [ApiController]
+    [Route("[controller]")]
+    public class PledgeController : ControllerBase
     {
         private static IConfiguration _config;
         private static IDatabaseService _db;

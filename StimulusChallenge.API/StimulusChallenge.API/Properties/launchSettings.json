@@ -4,15 +4,15 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:34889",
-      "sslPort": 44382
+      "applicationUrl": "http://localhost:12453",
+      "sslPort": 44397
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "pledge",
+      "launchUrl": "stats",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "StimulusChallenge.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "pledge",
+      "launchUrl": "stats",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
