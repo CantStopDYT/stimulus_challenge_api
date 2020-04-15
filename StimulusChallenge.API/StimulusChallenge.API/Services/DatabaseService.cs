@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+
 using Microsoft.Extensions.Configuration;
 
 using StimulusChallenge.API.Models;
@@ -13,7 +14,29 @@ namespace StimulusChallenge.API.Services
         {
             var result = new Stats();
 
-            //TODO: Actually call the DB...
+            using (var conn = new SqlConnection(config.GetConnectionString("DefaultConnection")))
+            {
+                const string command = "CALL stimuluschallenge.get_stats;";
+
+                using (var sqlCmd = new SqlCommand(command, conn))
+                {
+                    var smallBiz = sqlCmd.Parameters.Add("@TotalSmallBiz", SqlDbType.Int);
+                    smallBiz.Direction = ParameterDirection.Output;
+
+                    var nonProfit = sqlCmd.Parameters.Add("@TotalNonProfit", SqlDbType.Int);
+                    nonProfit.Direction = ParameterDirection.Output;
+
+                    var count = sqlCmd.Parameters.Add("@TotalPledges", SqlDbType.Int);
+                    count.Direction = ParameterDirection.Output;
+                    
+                    conn.Open();
+                    sqlCmd.ExecuteReader();
+                    
+                    result.SmallBizTotal = Convert.ToInt32(smallBiz.Value);
+                    result.NonProfitTotal = Convert.ToInt32(nonProfit.Value);
+                    result.PledgeTotal = Convert.ToInt32(count.Value);
+                }
+            }
             
             return result;
         }

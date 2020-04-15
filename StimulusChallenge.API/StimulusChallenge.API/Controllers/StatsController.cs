@@ -1,11 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
+
 using Microsoft.Extensions.Configuration;
 
+using StimulusChallenge.API.Models;
 using StimulusChallenge.API.Services;
 
 namespace StimulusChallenge.API.Controllers
 {
-    public class StatsController : Controller
+    public class StatsController : ApiController
     {
         private static IConfiguration _config;
         private static IDatabaseService _db;
@@ -17,11 +19,11 @@ namespace StimulusChallenge.API.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetStats()
+        public Stats GetStats()
         {
             var result = _db.GetStats(_config);
 
-            return new JsonResult(result);
+            return result;
         }
     }
 }
