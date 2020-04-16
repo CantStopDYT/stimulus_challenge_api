@@ -1,8 +1,9 @@
 using System;
 using System.Data;
-using System.Data.SqlClient;
 
 using Microsoft.Extensions.Configuration;
+
+using MySql.Data.MySqlClient;
 
 using StimulusChallenge.API.Models;
 
@@ -13,20 +14,20 @@ namespace StimulusChallenge.API.Services
         public Stats GetStats(IConfiguration config)
         {
             var result = new Stats();
-
-            using (var conn = new SqlConnection(config.GetConnectionString("DefaultConnection")))
+            
+            using (var conn = new MySqlConnection(config.GetConnectionString("DefaultConnection")))
             {
                 const string command = "CALL stimuluschallenge.get_stats;";
-
-                using (var sqlCmd = new SqlCommand(command, conn))
+                
+                using (var sqlCmd = new MySqlCommand(command, conn))
                 {
-                    var smallBiz = sqlCmd.Parameters.Add("@TotalSmallBiz", SqlDbType.Int);
+                    var smallBiz = sqlCmd.Parameters.Add("@TotalSmallBiz", MySqlDbType.Int32);
                     smallBiz.Direction = ParameterDirection.Output;
-
-                    var nonProfit = sqlCmd.Parameters.Add("@TotalNonProfit", SqlDbType.Int);
+                    
+                    var nonProfit = sqlCmd.Parameters.Add("@TotalNonProfit", MySqlDbType.Int32);
                     nonProfit.Direction = ParameterDirection.Output;
-
-                    var count = sqlCmd.Parameters.Add("@TotalPledges", SqlDbType.Int);
+                    
+                    var count = sqlCmd.Parameters.Add("@TotalPledges", MySqlDbType.Int32);
                     count.Direction = ParameterDirection.Output;
                     
                     conn.Open();
@@ -45,11 +46,11 @@ namespace StimulusChallenge.API.Services
         {
             var result = 0;
 
-            using (var conn = new SqlConnection(config.GetConnectionString("DefaultConnection")))
+            using (var conn = new MySqlConnection(config.GetConnectionString("DefaultConnection")))
             {
-                const string command = "INSERT INTO Pledge (Name, Email, ZipCode, NonProfit, SmallBiz) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz);";
+                const string command = "INSERT INTO stimuluschallenge.Pledge (Name, Email, ZipCode, NonProfit, SmallBiz) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz);";
 
-                using (var sqlCmd = new SqlCommand(command, conn))
+                using (var sqlCmd = new MySqlCommand(command, conn))
                 {
                     sqlCmd.Parameters.AddWithValue("@Name", pledge.Name);
                     sqlCmd.Parameters.AddWithValue("@Email", pledge.Email);
@@ -57,7 +58,7 @@ namespace StimulusChallenge.API.Services
                     sqlCmd.Parameters.AddWithValue("@NonProfit", pledge.NonProfit);
                     sqlCmd.Parameters.AddWithValue("@SmallBiz", pledge.SmallBiz);
 
-                    var retParam = sqlCmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                    var retParam = sqlCmd.Parameters.Add("@ReturnVal", MySqlDbType.Int32);
                     retParam.Direction = ParameterDirection.ReturnValue;
                     
                     conn.Open();
