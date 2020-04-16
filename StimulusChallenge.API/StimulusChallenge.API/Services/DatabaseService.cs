@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 using Microsoft.Extensions.Configuration;
 
@@ -13,7 +15,7 @@ namespace StimulusChallenge.API.Services
     {
         public Stats GetStats(IConfiguration config)
         {
-            var result = new Stats();
+            var objectList = new List<Stats>();
             
             using (var conn = new MySqlConnection(config.GetConnectionString("DefaultConnection")))
             {
@@ -21,25 +23,25 @@ namespace StimulusChallenge.API.Services
                 
                 using (var sqlCmd = new MySqlCommand(command, conn))
                 {
-                    var smallBiz = sqlCmd.Parameters.Add("@TotalSmallBiz", MySqlDbType.Int32);
-                    smallBiz.Direction = ParameterDirection.Output;
-                    
-                    var nonProfit = sqlCmd.Parameters.Add("@TotalNonProfit", MySqlDbType.Int32);
-                    nonProfit.Direction = ParameterDirection.Output;
-                    
-                    var count = sqlCmd.Parameters.Add("@TotalPledges", MySqlDbType.Int32);
-                    count.Direction = ParameterDirection.Output;
-                    
                     conn.Open();
-                    sqlCmd.ExecuteReader();
-                    
-                    result.SmallBizTotal = Convert.ToInt32(smallBiz.Value);
-                    result.NonProfitTotal = Convert.ToInt32(nonProfit.Value);
-                    result.PledgeTotal = Convert.ToInt32(count.Value);
+                    var reader = sqlCmd.ExecuteReader();
+
+
+                    while (reader.Read())
+                    {
+                        var resultObj = new Stats
+                        {
+                            SmallBizTotal = Convert.ToInt32(reader["TotalSmallBiz"]),
+                            NonProfitTotal = Convert.ToInt32(reader["TotalNonProfit"]),
+                            PledgeTotal = Convert.ToInt32(reader["TotalPledges"])
+                        };
+                        
+                        objectList.Add(resultObj);
+                    }
                 }
             }
             
-            return result;
+            return objectList.First();
         }
 
         public int SavePledge(IConfiguration config, Pledge pledge)
