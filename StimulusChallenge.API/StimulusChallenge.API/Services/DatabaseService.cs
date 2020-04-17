@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 using Microsoft.Extensions.Configuration;
-
-using MySql.Data.MySqlClient;
 
 using StimulusChallenge.API.Models;
 
@@ -17,11 +16,11 @@ namespace StimulusChallenge.API.Services
         {
             var objectList = new List<Stats>();
             
-            using (var conn = new MySqlConnection(config.GetConnectionString("DefaultConnection")))
+            using (var conn = new SqlConnection(config.GetConnectionString("MyDbConnection")))
             {
                 const string command = "CALL stimuluschallenge.get_stats;";
                 
-                using (var sqlCmd = new MySqlCommand(command, conn))
+                using (var sqlCmd = new SqlCommand(command, conn))
                 {
                     conn.Open();
                     var reader = sqlCmd.ExecuteReader();
@@ -48,11 +47,11 @@ namespace StimulusChallenge.API.Services
         {
             var result = 0;
 
-            using (var conn = new MySqlConnection(config.GetConnectionString("DefaultConnection")))
+            using (var conn = new SqlConnection(config.GetConnectionString("MyDbConnection")))
             {
-                const string command = "INSERT INTO stimuluschallenge.Pledge (Name, Email, ZipCode, NonProfit, SmallBiz) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz);";
+                const string command = "INSERT INTO Pledge (Name, Email, ZipCode, NonProfit, SmallBiz) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz);";
 
-                using (var sqlCmd = new MySqlCommand(command, conn))
+                using (var sqlCmd = new SqlCommand(command, conn))
                 {
                     sqlCmd.Parameters.AddWithValue("@Name", pledge.Name);
                     sqlCmd.Parameters.AddWithValue("@Email", pledge.Email);
@@ -60,12 +59,12 @@ namespace StimulusChallenge.API.Services
                     sqlCmd.Parameters.AddWithValue("@NonProfit", pledge.NonProfit);
                     sqlCmd.Parameters.AddWithValue("@SmallBiz", pledge.SmallBiz);
 
-                    var retParam = sqlCmd.Parameters.Add("@ReturnVal", MySqlDbType.Int32);
-                    retParam.Direction = ParameterDirection.ReturnValue;
+                    //var retParam = sqlCmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
+                    //retParam.Direction = ParameterDirection.ReturnValue;
                     
                     conn.Open();
                     sqlCmd.ExecuteReader();
-                    result = Convert.ToInt32(retParam.Value);
+                    //result = Convert.ToInt32(retParam.Value);
                 }
             }
             
