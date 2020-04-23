@@ -31,5 +31,5 @@ jobs:
       with:
         app-name: 'stimuluschallengeapiv3'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_5f3e0901e61940bba9c7d27920426edc }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c86b0c32a15c4335bae0186837fe6311 }}
         package: ${{env.DOTNET_ROOT}}/myapp 
