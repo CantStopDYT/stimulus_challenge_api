@@ -25,7 +25,6 @@ namespace StimulusChallenge.API.Services
                     conn.Open();
                     var reader = sqlCmd.ExecuteReader();
 
-
                     while (reader.Read())
                     {
                         var resultObj = new Stats
