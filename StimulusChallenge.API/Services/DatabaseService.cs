@@ -18,7 +18,7 @@ namespace StimulusChallenge.API.Services
             
             using (var conn = new SqlConnection(config.GetConnectionString("MyDbConnection")))
             {
-                const string command = "CALL stimuluschallenge.get_stats;";
+                const string command = "EXECUTE [dbo].[get_stats]";
                 
                 using (var sqlCmd = new SqlCommand(command, conn))
                 {
@@ -48,7 +48,7 @@ namespace StimulusChallenge.API.Services
 
             using (var conn = new SqlConnection(config.GetConnectionString("MyDbConnection")))
             {
-                const string command = "INSERT INTO Pledge (Name, Email, ZipCode, NonProfit, SmallBiz) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz);";
+                const string command = "INSERT INTO Pledge (Name, Email, ZipCode, NonProfit, SmallBiz, IpAddress, UserAgent) VALUES (@Name, @Email, @ZipCode, @NonProfit, @SmallBiz, @IpAddress, @UserAgent);";
 
                 using (var sqlCmd = new SqlCommand(command, conn))
                 {
@@ -57,6 +57,8 @@ namespace StimulusChallenge.API.Services
                     sqlCmd.Parameters.AddWithValue("@ZipCode", pledge.ZipCode);
                     sqlCmd.Parameters.AddWithValue("@NonProfit", pledge.NonProfit);
                     sqlCmd.Parameters.AddWithValue("@SmallBiz", pledge.SmallBiz);
+                    sqlCmd.Parameters.AddWithValue("@IpAddress", pledge.IpAddress);
+                    sqlCmd.Parameters.AddWithValue("@UserAgent", pledge.UserAgent);
 
                     //var retParam = sqlCmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
                     //retParam.Direction = ParameterDirection.ReturnValue;

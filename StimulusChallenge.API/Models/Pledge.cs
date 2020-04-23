@@ -13,5 +13,9 @@ namespace StimulusChallenge.API.Models
         public int NonProfit { get; set; }
         
         public int SmallBiz { get; set; }
+
+        public string IpAddress { get; set; }
+
+        public string UserAgent { get; set; }
     }
 }
